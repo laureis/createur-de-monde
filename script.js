@@ -205,7 +205,7 @@ function printWorlds(worldsTxt) {
     worldFile.Close();
 }
 
-function printDirectory(directory, div) {
+function printDirectory(directory) {
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var folder = object.GetFolder(directory);
     var fc = new Enumerator(folder.files);
@@ -225,3 +225,11 @@ function getFileExtension(file) {
     return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length);
 }
 
+function addWorldTxt(worldsTxt, newWorld) {
+    worldsTxt = "D:\\IMAC\\Stage\\createur-de-monde\\worlds.txt";
+    newWorld = "mdr";
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var worldFile = object.OpenTextFile(worldsTxt, 8, false);
+    worldFile.WriteLine(newWorld);
+    worldsFile.close();
+}
