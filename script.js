@@ -17,7 +17,7 @@ function postit() {
 }
 
 function nav() {
-	$('#navCreator').click(function() {
+  $('#navCreator').click(function() {
         $('#creator').removeClass('hidden');
         $('#update_form').addClass('hidden');
     });
@@ -210,6 +210,28 @@ function saveFile(worldName, fileName, type) {
     console.log("File is copied successfully");
 }
 
-function deleteFile(worldName, filePath) {
-    
+function printWorlds(worldsTxt) {
+    worldsTxt = "C:\\path-to\\worlds.txt"
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var worldFile = object.OpenTextFile(worldsTxt, 1, false);
+
+    var line;
+    while(!worldFile.AtEndOfStream) {
+        line = worldFile.ReadLine();
+        /* afficher chaque monde */
+        console.log(line);
+    }
+    worldFile.Close();
+}
+
+function printDirectory(directory) {
+    directory = "C:\\path-to\\folder"
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var folder = object.GetFolder(directory);
+    var fc = new Enumerator(folder.files);
+
+    for (; !fc.atEnd(); fc.moveNext()) {
+        /* afficher chaque fichier */
+        console.log(fc.item().Name);
+    }
 }
