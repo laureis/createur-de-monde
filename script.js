@@ -31,7 +31,7 @@ function nav() {
 function newWorld(inspiration, world) {
 
     var object = new ActiveXObject("Scripting.FileSystemObject");
-    object.CopyFolder("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+inspiration, "C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+world, false);
+    object.CopyFolder("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+inspiration, "C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\new\\"+world, false);
     console.log("World created successfully");
 }
 
@@ -70,7 +70,8 @@ function dragElement(elmnt) {
 /* WORLD UPDATE GENERAL FUNCTIONS */
 
 function updateForm() {
-     $("#update_form").submit(function () {
+    printWorlds();
+    $("#update_form").submit(function () {
         generateUpdateForm($('input[name=name_update]:checked').val());
         return false;
     });
@@ -190,19 +191,30 @@ function saveFile(worldName, fileName, type) {
 function deleteDirectory(wolrdName) {
 
 }
+
 /* PRINT FUNCTIONS */
 
-function printWorlds(worldsTxt) {
+function getWorlds() {
+
+}
+
+function printWorlds() {
+    var worldsTxt = "C:\\Users\\moi\\Desktop\\createur-de-monde\\worlds.txt";
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var worldFile = object.OpenTextFile(worldsTxt, 1, false);
-
     var line;
+    $('#update_form').append('<fieldset id="worldsList"><legend>Monde à modifier</legend></fieldset>');
+
     while(!worldFile.AtEndOfStream) {
         line = worldFile.ReadLine();
-        /* afficher chaque monde */
-        console.log(line);
+        
+        $('#worldsList').append('<div> <input type="radio" id="infini_update" name="name_update" value="'+line+'" />'
+                                +'<label for="infini_update">'+line+'</label>'
+                                +'</div>');
     }
     worldFile.Close();
+    $('#update_form').append('<input for="update_form" id="submit_update" type="submit" value="modifier">');
+
 }
 
 function printDirectory(directory, div) {
