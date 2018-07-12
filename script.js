@@ -219,6 +219,19 @@ function printDirectory(directory, div) {
     }
 }
 
+function printFolders(directory) {
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var folder = object.GetFolder(directory);
+    var fc = new Enumerator(folder.SubFolders);
+
+    var folder
+    for (; !fc.atEnd(); fc.moveNext()) {
+        folder = fc.item().Name;
+        console.log(folder);
+
+    }
+}
+
 function getFileExtension(file) {
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var fileName = object.GetFileName(file);
