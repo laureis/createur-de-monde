@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>Créateur de monde</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <link href="https://fonts.googleapis.com/css?family=Karla" rel="stylesheet">
+    <script src="script.js" charset="utf-8"></script>
+</head>
+
+<body>
+    
+    <div id="postit1">
+        <!--Include a header DIV with the same name as the draggable DIV, followed by "header":-->
+        <span class="close">x  </span>
+        <p> - Cliquez sur "Autoriser le contenu bloqué" si un message est affiché en bas de page. </p>
+        <p> - Lisez la documentation avant d'ajouter des éléments à Décalage</p>
+        <p> - Veillez à bien vérifier que la taille des fichiers .obj correspondent à ce que vous voulez créer</p>
+    </div>
+    <div id="postit2">
+        <!--Include a header DIV with the same name as the draggable DIV, followed by "header":-->
+        <span class="close">x  </span>
+        <p><a href="C:\Users\moi\Desktop\decalage_exe">exécutables</a></p> 
+        <p><a href="C:\Users\moi\Desktop\decalage_exe">documentation</a></p>
+
+    </div>
+    <div id="page">
+    <div id="form-container">
+        <nav>
+            <ul>
+                <li id="navCreator" class="active">Créer un nouveau monde</li>
+                <li id="navModifier">Modifier un monde</li>
+            </ul>
+        </nav>
+
+        <form action="/update.html" method="get" id="creator">
+
+            <!-- NOM DU MONDE-->
+            <div class="name">
+            <label for="name">Nom du nouveau monde :</label>
+            <input type="text" name="newName" id="newName" required>
+            </div>
+
+            <!-- CARACTERISTIQUES DU MONDE-->
+            <fieldset>
+                <legend>Inspiration</legend>
+            
+                <div>
+                    <input type="radio" id="infini" name="inspi" value ="main"/>
+                    <label for="infini">terrain infini</label>
+                </div>
+            
+                <div>
+                    <input type="radio" id="cubique" name="inspi" value ="jaune"/>
+                    <label for="cubique">jaune</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="tunnel" name="inspi" value ="tunnel"/>
+                    <label for="tunnel">tunnel</label>
+                </div>
+            
+                <div>
+                    <input type="radio" id="noinspi" name="inspi" value ="template"/>
+                    <label for="noinspi">nouveau monde</label>
+                </div>
+            </fieldset>
+
+            <div class="create">
+            <input type="submit" value="créer">
+            </div>
+        </form>
+
+        <form action="#" method="get" id="update_form" class="hidden">
+
+            <!-- NOM DU MONDE-->
+            <fieldset>
+                <legend>Monde à modifier</legend>
+            
+                <div>
+                    <input type="radio" id="infini_update" name="name_update" value="terrain infini" />
+                    <label for="infini_update">terrain infini</label>
+                </div>
+            
+                <div>
+                    <input type="radio" id="cubique_update" name="name_update" value="gravité cubique"  />
+                    <label for="cubique_update">gravité cubique</label>
+                </div>
+            
+                <div>
+                    <input type="radio" id="tunnel_update" name="name_update" value="tunnel"  />
+                    <label for="tunnel_update">tunnel</label>
+                </div>
+            </fieldset>
+
+            <div class="update">
+                <input id="submit_updtate" type="submit" value="modifier">
+            </div>
+            
+            <div id="worldToUpdate">
+            </div>
+        </form>
+   
+        </div>
+
+        <div id="links">
+        </div>
+    </div>
+</body>
+
+</html>
