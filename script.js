@@ -16,7 +16,7 @@ function postit() {
     });
 }
 function nav() {
-	$('#navCreator').click(function() {
+  $('#navCreator').click(function() {
         $('#creator').removeClass('hidden');
         $('#update_form').addClass('hidden');
     });
@@ -138,4 +138,18 @@ function createDoor(world) {
     var object = new ActiveXObject("Scripting.FileSystemObject");
     object.CopyFile("C:\\Users\\moi\\Desktop\\newImage.png", "C:\\Users\\moi\\Desktop\\newImage.png", true);
     console.log("File is copied successfully");
+}
+
+function printWorlds(directory) {
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var worldFile = object.OpenTextFile("C:\\path-to\\worlds.txt", 1, false);
+
+    var line;
+    while(!worldFile.AtEndOfStream) {
+        line = worldFile.ReadLine();
+        /* afficher chaque monde */
+        console.log(line);
+    }
+    worldFile.Close();
+
 }
