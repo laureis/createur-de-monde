@@ -80,15 +80,13 @@ function generateUpdateForm(name) {
     generateUpdateFormMenu();
     $('#worldToUpdate').append('<fieldset id="fieldsetUpdate"><legend>Modification du monde '+name+'</legend></fieldset>');
     generateUpdateAddForm(name, true);
-    generateUpdateDeleteForm(name, false);
     generateUpdateListForm(name, false);
 }
 
 function generateUpdateFormMenu() {
     $('#worldToUpdate').html('<nav><ul>'
         + '<li id="navUpdateAdd" class="active">Ajouter</li>'
-        + '<li id="navUpdateDelete">Supprimer</li>'
-        + '<li id="navUpdateList">Voir</li>'
+        + '<li id="navUpdateList">Supprimer</li>'
         + '</ul></nav>');
     navigationUpdateFormMenu();
 }
@@ -96,17 +94,10 @@ function generateUpdateFormMenu() {
 function navigationUpdateFormMenu() {
 	$('#navUpdateAdd').click(function() {
         $('#updateAddForm').removeClass('hidden');
-        $('#updateDeleteForm').addClass('hidden');
-        $('#updateListForm').addClass('hidden');
-    });
-    $('#navUpdateDelete').click(function() {
-        $('#updateAddForm').addClass('hidden');
-        $('#updateDeleteForm').removeClass('hidden');
         $('#updateListForm').addClass('hidden');
     });
     $('#navUpdateList').click(function() {
         $('#updateAddForm').addClass('hidden');
-        $('#updateDeleteForm').addClass('hidden');
         $('#updateListForm').removeClass('hidden');
     });
 }
@@ -148,35 +139,6 @@ function addObject(worldName) {
     });
 }
 
-
-/* UPDATE_DELETE PAGE */
-
-function generateUpdateDeleteForm(name, display) {
-    $('#fieldsetUpdate').append("<div id='updateDeleteForm' class='hidden'></div>");
-    if (display) $('#updateDeleteForm').removeClass('hidden');
-    else $('#updateDeleteForm').addClass('hidden');
-    deleteBuilding(name);
-    deleteObject(name);
-}
-
-function deleteBuilding(worldName) {
-    $('#updateDeleteForm').append("<p id='deleteBuilding'>Supprimer une structure building</p>");
-    $('#deleteBuilding').append('<br /><input type="submit" id="submit_delete_building" value="supprimer">');
-    $('#submit_delete_building').click(function() {
-        delete(name);
-        return false;
-    });
-}
-
-function deleteObject(name) {
-    $('#updateDeleteForm').append("<p id='deleteObject'>Supprimer une structure building</p>");
-    $('#deleteObject').append('<br /><input type="submit" id="submit_delete_object" value="supprimer">');
-    $('#submit_delete_building').click(function() {
-        delete(name);
-        return false;
-    });
-}
-
 /* UPDATE_LIST PAGE */
 
 function generateUpdateListForm(name, display) {   
@@ -185,14 +147,29 @@ function generateUpdateListForm(name, display) {
     else $('#updateListForm').addClass('hidden');
     listBuildings(name);
     listObjects(name);
+    $('#updateListForm').append('<br /><input type="submit" id="delete_object" value="supprimer">');
+
 }
 
 function listBuildings(worldName) {
     $('#updateListForm').append("<p id='listBuildings'>Liste des stuctures</p>");
+    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\buildings\\prefab", "#listBuildings");
 }
 
-function listObjects(name) {
+function listObjects(worldName) {
     $('#updateListForm').append("<p id='listObjects'>Liste des objets</p>");
+
+    $('#listObjects').append("<p id='listFreeObjects'>Free</p>");
+    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\free\\prefab", "#listFreeObjects");
+
+    $('#listObjects').append("<p id='listThrowableObjects'>Throwable</p>");
+    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\throwable\\prefab", "#listThrowableObjects");
+    
+    $('#listObjects').append("<p id='listPanels'>Panels</p>");
+    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\panels\\prefab", "#listPanels");
+    
+    $('#listObjects').append("<p id='listAnimatedObjects'>Animated</p>");
+    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\animated\\prefab", "#listAnimatedObjects");
 }
 
 /* GENERAL UPDATE FUNCTIONS */
@@ -210,8 +187,12 @@ function saveFile(worldName, fileName, type) {
     console.log("File is copied successfully");
 }
 
+function deleteDirectory(wolrdName) {
+
+}
+/* PRINT FUNCTIONS */
+
 function printWorlds(worldsTxt) {
-    worldsTxt = "C:\\path-to\\worlds.txt"
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var worldFile = object.OpenTextFile(worldsTxt, 1, false);
 
@@ -224,14 +205,23 @@ function printWorlds(worldsTxt) {
     worldFile.Close();
 }
 
-function printDirectory(directory) {
-    directory = "C:\\path-to\\folder"
+function printDirectory(directory, div) {
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var folder = object.GetFolder(directory);
     var fc = new Enumerator(folder.files);
-
+    $(div).append("<form class='list'></form>")
     for (; !fc.atEnd(); fc.moveNext()) {
-        /* afficher chaque fichier */
-        console.log(fc.item().Name);
+        var filePath = directory+"\\"+fc.item().Name;
+        if (getFileExtension(filePath).localeCompare("meta") == true)
+            $(div+' .list').append('<input type="checkbox" name="feature"'
+                +'value="'+filePath+'" />'
+                +'<label for="scales"><a href="'+filePath+'">'+fc.item().Name+'</a></label><br />');
     }
 }
+
+function getFileExtension(file) {
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var fileName = object.GetFileName(file);
+    return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length);
+}
+
