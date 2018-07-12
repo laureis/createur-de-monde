@@ -141,7 +141,6 @@ function createDoor(world) {
 }
 
 function printWorlds(worldsTxt) {
-    worldsTxt = "C:\\path-to\\worlds.txt"
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var worldFile = object.OpenTextFile(worldsTxt, 1, false);
 
@@ -155,7 +154,6 @@ function printWorlds(worldsTxt) {
 }
 
 function printDirectory(directory) {
-    directory = "C:\\path-to\\folder"
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var folder = object.GetFolder(directory);
     var fc = new Enumerator(folder.files);
@@ -164,4 +162,13 @@ function printDirectory(directory) {
         /* afficher chaque fichier */
         console.log(fc.item().Name);
     }
+}
+
+function addWorldTxt(worldsTxt, newWorld) {
+    worldsTxt = "D:\\IMAC\\Stage\\createur-de-monde\\worlds.txt";
+    newWorld = "mdr";
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var worldFile = object.OpenTextFile(worldsTxt, 8, false);
+    worldFile.WriteLine(newWorld);
+    worldsFile.close();
 }
