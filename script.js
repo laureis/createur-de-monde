@@ -140,9 +140,10 @@ function createDoor(world) {
     console.log("File is copied successfully");
 }
 
-function printWorlds(directory) {
+function printWorlds(worldsTxt) {
+    worldsTxt = "C:\\path-to\\worlds.txt"
     var object = new ActiveXObject("Scripting.FileSystemObject");
-    var worldFile = object.OpenTextFile("C:\\path-to\\worlds.txt", 1, false);
+    var worldFile = object.OpenTextFile(worldsTxt, 1, false);
 
     var line;
     while(!worldFile.AtEndOfStream) {
@@ -151,5 +152,16 @@ function printWorlds(directory) {
         console.log(line);
     }
     worldFile.Close();
+}
 
+function printDirectory(directory) {
+    directory = "C:\\path-to\\folder"
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var folder = object.GetFolder(directory);
+    var fc = new Enumerator(folder.files);
+
+    for (; !fc.atEnd(); fc.moveNext()) {
+        /* afficher chaque fichier */
+        console.log(fc.item().Name);
+    }
 }
