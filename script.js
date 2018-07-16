@@ -13,7 +13,12 @@ function postit() {
     dragElement(document.getElementById("postit2"));
     $('#postit2 .close').click(function() {
         $('#postit2').addClass('hidden');
-    });
+    });/*
+    setTimeout($(".swag").focus(), 0);
+    dragElement(document.getElementById("postit3"));
+    $('#postit3 .close').click(function() {
+        $('#postit3').addClass('hidden');
+    });*/
 }
 
 function nav() {
@@ -31,7 +36,8 @@ function nav() {
 function newWorld(inspiration, world) {
 
     var object = new ActiveXObject("Scripting.FileSystemObject");
-    object.CopyFolder("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+inspiration, "C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\new\\"+world, false);
+    object.CopyFolder("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+inspiration, "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\new\\"+world, false);
+    object.CopyFile("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\scenes\\"+inspiration+".unity", "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\scenes\\"+world+".unity", false);
     console.log("World created successfully");
 }
 
@@ -78,6 +84,7 @@ function updateForm() {
 }
 
 function generateUpdateForm(name) {
+    $("#update_form").append('<div id="worldToUpdate"></div>');
     generateUpdateFormMenu();
     $('#worldToUpdate').append('<fieldset id="fieldsetUpdate"><legend>Modification du monde '+name+'</legend></fieldset>');
     generateUpdateAddForm(name, true);
@@ -122,7 +129,7 @@ function addBuilding(worldName) {
     $('#addBuilding').append(x);
     $('#addBuilding').append('<br /><input type="submit" id="submit_building" value="ajouter">');
     $('#submit_building').click(function() {
-        saveFile(type, worldName, $('#buildingFile').val());
+        saveFile(worldName, $('#buildingFile').val(), "3d\\buildings\\prefab\\");
         return false;
     });
 }
@@ -133,44 +140,57 @@ function addObject(worldName) {
     x.setAttribute("type", "file");
     x.setAttribute("id", "objectFile");
     $('#addObject').append(x);
+    addTypeObject();
     $('#addObject').append('<br /><input type="submit" id="submit_object" value="ajouter">');
     $('#submit_object').click(function() {
-        saveFile(type, worldName, $('#objectFile').val());
+        var type = $('input[name=typeObject]:checked').val();
+        saveFile(worldName, $('#objectFile').val(), "3d\\objects\\"+ type+ "\\prefab\\");
         return false;
     });
 }
 
+function addTypeObject() {
+    $('#addObject').append('<div id="objectType">Type  '+
+    '<input type="radio" id="free" name="typeObjet" value ="free" checked="checked" />'+
+    '<label for="free">free</label>'+
+    '<input type="radio" id="throwable" name="typeObject" value ="throwable"/>'+
+    '<label for="throwable">throwable</label>'+
+    '<input type="radio" id="animated" name="typeObject" value ="animated"/>'+
+    '<label for="animated">animated</label>'+
+    '<input type="radio" id="characters" name="typeObject" value ="characters"/>'+
+    '<label for="characters">character</label></div>');
+}
 /* UPDATE_LIST PAGE */
 
 function generateUpdateListForm(name, display) {   
     $('#fieldsetUpdate').append("<div id='updateListForm' class='hidden'></div>"); 
     if (display) $('#updateListForm').removeClass('hidden');
     else $('#updateListForm').addClass('hidden');
-    listBuildings(name);
-    listObjects(name);
+    listBuildings("new\\"+name);
+    listObjects("new\\"+name);
     $('#updateListForm').append('<br /><input type="submit" id="delete_object" value="supprimer">');
 
 }
 
 function listBuildings(worldName) {
     $('#updateListForm').append("<p id='listBuildings'>Liste des stuctures</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\buildings\\prefab", "#listBuildings");
+    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\buildings\\prefab", "#listBuildings");
 }
 
 function listObjects(worldName) {
     $('#updateListForm').append("<p id='listObjects'>Liste des objets</p>");
 
     $('#listObjects').append("<p id='listFreeObjects'>Free</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\free\\prefab", "#listFreeObjects");
+    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\free\\prefab", "#listFreeObjects");
 
     $('#listObjects').append("<p id='listThrowableObjects'>Throwable</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\throwable\\prefab", "#listThrowableObjects");
+    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\throwable\\prefab", "#listThrowableObjects");
     
     $('#listObjects').append("<p id='listPanels'>Panels</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\panels\\prefab", "#listPanels");
+    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\panels\\prefab", "#listPanels");
     
     $('#listObjects').append("<p id='listAnimatedObjects'>Animated</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\decalage\\Decalage\\Assets\\Resources\\"+worldName+"\\3d\\objects\\animated\\prefab", "#listAnimatedObjects");
+    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\animated\\prefab", "#listAnimatedObjects");
 }
 
 /* GENERAL UPDATE FUNCTIONS */
@@ -182,9 +202,10 @@ function create(world) {
     });
 }
 
-function saveFile(worldName, fileName, type) {
+function saveFile(worldName, filePath, type) {
+    var fileName = filePath.split(/(\\|\/)/g).pop();
     var object = new ActiveXObject("Scripting.FileSystemObject");
-    object.CopyFile(fileName, "C:\\Users\\moi\\Desktop\\newImage.png", true);
+    object.CopyFile(filePath, "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\new\\"+worldName+"\\"+type+fileName, true);
     console.log("File is copied successfully");
 }
 
@@ -195,25 +216,6 @@ function deleteDirectory(wolrdName) {
 /* PRINT FUNCTIONS */
 
 function getWorlds() {
-
-}
-
-function printWorlds() {
-    var worldsTxt = "C:\\Users\\moi\\Desktop\\createur-de-monde\\worlds.txt";
-    var object = new ActiveXObject("Scripting.FileSystemObject");
-    var worldFile = object.OpenTextFile(worldsTxt, 1, false);
-    var line;
-    $('#update_form').append('<fieldset id="worldsList"><legend>Monde à modifier</legend></fieldset>');
-
-    while(!worldFile.AtEndOfStream) {
-        line = worldFile.ReadLine();
-        
-        $('#worldsList').append('<div> <input type="radio" id="infini_update" name="name_update" value="'+line+'" />'
-                                +'<label for="infini_update">'+line+'</label>'
-                                +'</div>');
-    }
-    worldFile.Close();
-    $('#update_form').append('<input for="update_form" id="submit_update" type="submit" value="modifier">');
 
 }
 
@@ -231,17 +233,23 @@ function printDirectory(directory, div) {
     }
 }
 
-function printFolders(directory) {
+function printWorlds() {
+    var directory = "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\new";
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var folder = object.GetFolder(directory);
     var fc = new Enumerator(folder.SubFolders);
+    $('#update_form').append('<fieldset id="worldsList"><legend>Monde à modifier</legend></fieldset>');
 
     var folder
     for (; !fc.atEnd(); fc.moveNext()) {
         folder = fc.item().Name;
-        console.log(folder);
+        $('#worldsList').append('<div> <input type="radio" id="infini_update" name="name_update" value="'+folder+'" />'
+                                +'<label for="infini_update">'+folder+'</label>'
+                                +'</div>');
 
     }
+    $('#update_form').append('<input for="update_form" id="submit_update" type="submit" value="modifier">');
+
 }
 
 function getFileExtension(file) {
