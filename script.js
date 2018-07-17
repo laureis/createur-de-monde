@@ -13,12 +13,12 @@ function postit() {
     dragElement(document.getElementById("postit2"));
     $('#postit2 .close').click(function() {
         $('#postit2').addClass('hidden');
-    });/*
+    });
     setTimeout($(".swag").focus(), 0);
     dragElement(document.getElementById("postit3"));
     $('#postit3 .close').click(function() {
         $('#postit3').addClass('hidden');
-    });*/
+    });
 }
 
 function nav() {
@@ -119,6 +119,8 @@ function generateUpdateAddForm(name, display) {
     else $('#updateAddForm').addClass('hidden');
     addBuilding(name);
     addObject(name);
+    addTexture(name);
+    addSkybox(name);
 }
 
 function addBuilding(worldName) {
@@ -160,16 +162,56 @@ function addTypeObject() {
     '<input type="radio" id="characters" name="typeObject" value ="characters"/>'+
     '<label for="characters">character</label></div>');
 }
+
+function addTexture(worldName) {
+    $('#updateAddForm').append("<p id='addTexture'>Ajouter une texture</p>");
+    var x = document.createElement("INPUT");
+    x.setAttribute("type", "file");
+    x.setAttribute("id", "textureFile");
+    $('#addTexture').append(x);
+    $('#addTexture').append('<br /><input type="submit" id="submit_texture" value="ajouter">');
+    $('#submit_texture').click(function() {
+        saveFile(worldName, $('#textureFile').val(), "materials\\troiscarres\\Textures");
+        return false;
+    });
+}
+
+function addSkybox(worldName) {
+    $('#updateAddForm').append("<p id='addSkybox'>Ajouter une texture</p>");
+    var x = document.createElement("INPUT");
+    x.setAttribute("type", "file");
+    x.setAttribute("id", "skyboxFile");
+    $('#addSkybox').append(x);
+    $('#addSkybox').append('<br /><input type="submit" id="submit_skybox" value="ajouter">');
+    $('#submit_skybox').click(function() {
+        saveFile(worldName, $('#skyboxFile').val(), "materials\\skybox");
+        return false;
+    });
+}
+
+
 /* UPDATE_LIST PAGE */
 
 function generateUpdateListForm(name, display) {   
     $('#fieldsetUpdate').append("<div id='updateListForm' class='hidden'></div>"); 
     if (display) $('#updateListForm').removeClass('hidden');
     else $('#updateListForm').addClass('hidden');
+    $('#updateListForm').append('<br /><input type="submit" id="select_all" value="sélectionner tout">');
     listBuildings("new\\"+name);
     listObjects("new\\"+name);
+    listTextures("new\\"+name);
+    listSkybox("new\\"+name);
     $('#updateListForm').append('<br /><input type="submit" id="delete_object" value="supprimer">');
-
+    $('#delete_object').click(function() {
+        selectedFiles = $("input:checkbox:checked");
+        for (var i = 0; i < selectedFiles.length; i++) deleteFile(selectedFiles[i].value); 
+        return false;
+    });
+    $('select_all').click(function() {
+        unselectedFiles = $("input:checkbox");
+        for (var i = 0; i < unselectedFiles.length; i++) unselectedFiles[i].prop( "checked", true );
+        return false;
+    });
 }
 
 function listBuildings(worldName) {
@@ -193,6 +235,16 @@ function listObjects(worldName) {
     printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\animated\\prefab", "#listAnimatedObjects");
 }
 
+function listTextures(worldName) {
+    $('#updateListForm').append("<p id='listTextures'>Liste des textures</p>");
+    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\materials\\troiscarres\\Textures", "#listTextures");
+}
+
+function listSkybox(worldName) {
+    $('#updateListForm').append("<p id='listSkybox'>Liste des skybox</p>");
+    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\materials\\skybox", "#listSkybox");
+}
+
 /* GENERAL UPDATE FUNCTIONS */
 
 function create(world) {
@@ -207,6 +259,11 @@ function saveFile(worldName, filePath, type) {
     var object = new ActiveXObject("Scripting.FileSystemObject");
     object.CopyFile(filePath, "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\new\\"+worldName+"\\"+type+fileName, true);
     console.log("File is copied successfully");
+}
+
+function deleteFile(filePath) {
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    object.DeleteFile(filePath);
 }
 
 function deleteDirectory(wolrdName) {
