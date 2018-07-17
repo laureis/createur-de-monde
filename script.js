@@ -1,3 +1,5 @@
+var path = "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\";
+
 window.onload = function() {
     nav();
     updateForm();
@@ -36,8 +38,8 @@ function nav() {
 function newWorld(inspiration, world) {
 
     var object = new ActiveXObject("Scripting.FileSystemObject");
-    object.CopyFolder("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+inspiration, "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\new\\"+world, false);
-    object.CopyFile("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\scenes\\"+inspiration+".unity", "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\scenes\\"+world+".unity", false);
+    object.CopyFolder(path + "Assets\\Resources\\"+inspiration, path + "Assets\\Resources\\new\\"+world, false);
+    object.CopyFile(path + "Assets\\scenes\\"+inspiration+".unity", path + "Assets\\scenes\\"+world+".unity", false);
     console.log("World created successfully");
 }
 
@@ -131,7 +133,8 @@ function addBuilding(worldName) {
     $('#addBuilding').append(x);
     $('#addBuilding').append('<br /><input type="submit" id="submit_building" value="ajouter">');
     $('#submit_building').click(function() {
-        saveFile(worldName, $('#buildingFile').val(), "3d\\buildings\\prefab\\");
+        if (validateFile($('#buildingFile').val(), "obj")) saveFile(worldName, $('#buildingFile').val(), "3d\\buildings\\prefab\\");
+        else alert("Le fichier doit être un obj");
         return false;
     });
 }
@@ -146,14 +149,16 @@ function addObject(worldName) {
     $('#addObject').append('<br /><input type="submit" id="submit_object" value="ajouter">');
     $('#submit_object').click(function() {
         var type = $('input[name=typeObject]:checked').val();
-        saveFile(worldName, $('#objectFile').val(), "3d\\objects\\"+ type+ "\\prefab\\");
+        if (validateFile($('#objectFile').val(), "obj")) saveFile(worldName, $('#objectFile').val(), "3d\\objects\\"+ type+ "\\prefab\\");
+        else alert("Le fichier doit être un obj");
         return false;
     });
 }
 
 function addTypeObject() {
+    
     $('#addObject').append('<div id="objectType">Type  '+
-    '<input type="radio" id="free" name="typeObjet" value ="free" checked="checked" />'+
+    '<input type="radio" id="free" name="typeObjet" value ="free"/>'+
     '<label for="free">free</label>'+
     '<input type="radio" id="throwable" name="typeObject" value ="throwable"/>'+
     '<label for="throwable">throwable</label>'+
@@ -171,20 +176,22 @@ function addTexture(worldName) {
     $('#addTexture').append(x);
     $('#addTexture').append('<br /><input type="submit" id="submit_texture" value="ajouter">');
     $('#submit_texture').click(function() {
-        saveFile(worldName, $('#textureFile').val(), "materials\\troiscarres\\Textures");
+        if (validateFile($('#textureFile').val(), "jpg")) saveFile(worldName, $('#textureFile').val(), "materials\\troiscarres\\Textures");
+        else alert("Le fichier doit être un .png");
         return false;
     });
 }
 
 function addSkybox(worldName) {
-    $('#updateAddForm').append("<p id='addSkybox'>Ajouter une texture</p>");
+    $('#updateAddForm').append("<p id='addSkybox'>Ajouter une skybox</p>");
     var x = document.createElement("INPUT");
     x.setAttribute("type", "file");
     x.setAttribute("id", "skyboxFile");
     $('#addSkybox').append(x);
     $('#addSkybox').append('<br /><input type="submit" id="submit_skybox" value="ajouter">');
     $('#submit_skybox').click(function() {
-        saveFile(worldName, $('#skyboxFile').val(), "materials\\skybox");
+        if (validateFile($('#skyboxFile').val(), "png")) saveFile(worldName, $('#skyboxFile').val(), "materials\\skybox");
+        else alert("Le fichier doit être un .png");
         return false;
     });
 }
@@ -216,33 +223,33 @@ function generateUpdateListForm(name, display) {
 
 function listBuildings(worldName) {
     $('#updateListForm').append("<p id='listBuildings'>Liste des stuctures</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\buildings\\prefab", "#listBuildings");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\3d\\buildings\\prefab", "#listBuildings");
 }
 
 function listObjects(worldName) {
     $('#updateListForm').append("<p id='listObjects'>Liste des objets</p>");
 
     $('#listObjects').append("<p id='listFreeObjects'>Free</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\free\\prefab", "#listFreeObjects");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\3d\\objects\\free\\prefab", "#listFreeObjects");
 
     $('#listObjects').append("<p id='listThrowableObjects'>Throwable</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\throwable\\prefab", "#listThrowableObjects");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\3d\\objects\\throwable\\prefab", "#listThrowableObjects");
     
     $('#listObjects').append("<p id='listPanels'>Panels</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\panels\\prefab", "#listPanels");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\3d\\objects\\panels\\prefab", "#listPanels");
     
     $('#listObjects').append("<p id='listAnimatedObjects'>Animated</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\3d\\objects\\animated\\prefab", "#listAnimatedObjects");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\3d\\objects\\animated\\prefab", "#listAnimatedObjects");
 }
 
 function listTextures(worldName) {
     $('#updateListForm').append("<p id='listTextures'>Liste des textures</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\materials\\troiscarres\\Textures", "#listTextures");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\materials\\troiscarres\\Textures", "#listTextures");
 }
 
 function listSkybox(worldName) {
     $('#updateListForm').append("<p id='listSkybox'>Liste des skybox</p>");
-    printDirectory("C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\"+worldName+"\\materials\\skybox", "#listSkybox");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\materials\\skybox", "#listSkybox");
 }
 
 /* GENERAL UPDATE FUNCTIONS */
@@ -257,7 +264,7 @@ function create(world) {
 function saveFile(worldName, filePath, type) {
     var fileName = filePath.split(/(\\|\/)/g).pop();
     var object = new ActiveXObject("Scripting.FileSystemObject");
-    object.CopyFile(filePath, "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\new\\"+worldName+"\\"+type+fileName, true);
+    object.CopyFile(filePath, path + "Assets\\Resources\\new\\"+worldName+"\\"+type+fileName, true);
     console.log("File is copied successfully");
 }
 
@@ -286,12 +293,12 @@ function printDirectory(directory, div) {
         if (getFileExtension(filePath).localeCompare("meta") == true)
             $(div+' .list').append('<input type="checkbox" name="feature"'
                 +'value="'+filePath+'" />'
-                +'<label for="scales"><a href="'+filePath+'">'+fc.item().Name+'</a></label><br />');
+                +'<label for="scales"><a href="'+filePath+' target="_blank">'+fc.item().Name+'</a></label><br />');
     }
 }
 
 function printWorlds() {
-    var directory = "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\Assets\\Resources\\new";
+    var directory = path + "Assets\\Resources\\new";
     var object = new ActiveXObject("Scripting.FileSystemObject");
     var folder = object.GetFolder(directory);
     var fc = new Enumerator(folder.SubFolders);
@@ -315,3 +322,6 @@ function getFileExtension(file) {
     return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length);
 }
 
+function validateFile(file, extension) {
+    return (getFileExtension(file) == extension);
+}
