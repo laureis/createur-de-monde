@@ -34,7 +34,7 @@ nav ul li:hover {
     margin-right:auto;
     width:700px;
 }
-#form-container {
+#form-container, #setPath  {
     background-color:white;
     padding:0 50px 50px 50px;
 }
@@ -110,4 +110,33 @@ nav ul li:hover {
 
 #postit1 p, #postit2 p {
     padding:20px;
+}
+
+fieldset {
+    padding:15px;
+}
+fieldset legend {
+
+    padding-left:12px;
+    padding-right:12px;
+    font-size:12px;
+    font-weight:bold;
+    text-transform:uppercase;
+}
+
+.active {
+    color:red;
+}
+
+input[type="submit"] {
+    cursor:pointer;
+    font-size:12px;
+    text-transform:uppercase;
+    margin:0;
+    padding-left:15px;
+    padding-right:15px;
+}
+
+input[type="file"] {
+    width:100px;
 }

@@ -1,10 +1,34 @@
 var path = "C:\\Users\\moi\\Desktop\\DECALAGE\\decalage_unity\\";
 
 window.onload = function() {
+    checkFile();
     nav();
     updateForm();
     create();
     postit();
+}
+
+function checkFile() {
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    if (!object.FileExists(path+"creator.txt")) {
+        setPath();
+        $('#form-container').addClass('hidden');
+        return false;
+    }
+    return true;
+}
+
+function setPath() {
+    $('#page').append("<div id='setPath'>Chargez le projet</div>");
+    $('#setPath').append("<input type='file' id='creatorFile'>");
+    $('#setPath').append('<br /><input type="submit" id="submit_path" value="charger">');
+    $('#submit_path').click(function() {
+        path = $('#creatorFile').val();
+        alert("Le projet a bien été chargé !");
+        $('#form-container').removeClass('hidden');  
+        $('#setPath').addClass('hidden');  
+        return false;
+    });
 }
 
 function postit() {
@@ -24,13 +48,18 @@ function postit() {
 }
 
 function nav() {
+
   $('#navCreator').click(function() {
         $('#creator').removeClass('hidden');
         $('#update_form').addClass('hidden');
+        $('#navCreator').addClass('active');
+        $('#navModifier').removeClass('active');
     });
     $('#navModifier').click(function() {
         $('#creator').addClass('hidden');
         $('#update_form').removeClass('hidden');
+        $('#navCreator').removeClass('active');
+        $('#navModifier').addClass('active');
     });
 }
 
@@ -122,6 +151,7 @@ function generateUpdateAddForm(name, display) {
     addBuilding(name);
     addObject(name);
     addTexture(name);
+    addTextPanel(name);
     addSkybox(name);
 }
 
@@ -133,7 +163,9 @@ function addBuilding(worldName) {
     $('#addBuilding').append(x);
     $('#addBuilding').append('<br /><input type="submit" id="submit_building" value="ajouter">');
     $('#submit_building').click(function() {
-        if (validateFile($('#buildingFile').val(), "obj")) saveFile(worldName, $('#buildingFile').val(), "3d\\buildings\\prefab\\");
+        if (validateFile($('#buildingFile').val(), "obj")) {
+            saveFile(worldName, $('#buildingFile').val(), "3d\\buildings\\prefab\\");
+        }
         else alert("Le fichier doit être un obj");
         return false;
     });
@@ -176,7 +208,24 @@ function addTexture(worldName) {
     $('#addTexture').append(x);
     $('#addTexture').append('<br /><input type="submit" id="submit_texture" value="ajouter">');
     $('#submit_texture').click(function() {
-        if (validateFile($('#textureFile').val(), "jpg")) saveFile(worldName, $('#textureFile').val(), "materials\\troiscarres\\Textures");
+        if (validateFile($('#textureFile').val(), "png")) 
+            saveFile(worldName, $('#textureFile').val(), "materials\\troiscarres\\Textures\\");
+        else alert("Le fichier doit être un .png");
+        return false;
+    });
+}
+
+
+function addTextPanel(worldName) {
+    $('#updateAddForm').append("<p id='addTextPanel'>Ajouter un texte</p>");
+    var x = document.createElement("INPUT");
+    x.setAttribute("type", "file");
+    x.setAttribute("id", "textPanelFile");
+    $('#addTextPanel').append(x);
+    $('#addTextPanel').append('<br /><input type="submit" id="submit_text_panel" value="ajouter">');
+    $('#submit_texture').click(function() {
+        if (validateFile($('#textPanelFile').val(), "png")) 
+            saveFile(worldName, $('#textPanelFile').val(), "materials\\panels\\Textures\\");
         else alert("Le fichier doit être un .png");
         return false;
     });
@@ -190,7 +239,7 @@ function addSkybox(worldName) {
     $('#addSkybox').append(x);
     $('#addSkybox').append('<br /><input type="submit" id="submit_skybox" value="ajouter">');
     $('#submit_skybox').click(function() {
-        if (validateFile($('#skyboxFile').val(), "png")) saveFile(worldName, $('#skyboxFile').val(), "materials\\skybox");
+        if (validateFile($('#skyboxFile').val(), "png")) saveFile(worldName, $('#skyboxFile').val(), "materials\\skybox\\Textures\\");
         else alert("Le fichier doit être un .png");
         return false;
     });
@@ -207,6 +256,7 @@ function generateUpdateListForm(name, display) {
     listBuildings("new\\"+name);
     listObjects("new\\"+name);
     listTextures("new\\"+name);
+    listTextPanels("new\\"+name);
     listSkybox("new\\"+name);
     $('#updateListForm').append('<br /><input type="submit" id="delete_object" value="supprimer">');
     $('#delete_object').click(function() {
@@ -247,9 +297,14 @@ function listTextures(worldName) {
     printDirectory(path + "Assets\\Resources\\"+worldName+"\\materials\\troiscarres\\Textures", "#listTextures");
 }
 
+function listTextPanels(worldName) {
+    $('#updateListForm').append("<p id='listTextPanels'>Liste des panneaux de textes</p>");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\materials\\panels\\Textures", "#listTextPanels");
+}
+
 function listSkybox(worldName) {
     $('#updateListForm').append("<p id='listSkybox'>Liste des skybox</p>");
-    printDirectory(path + "Assets\\Resources\\"+worldName+"\\materials\\skybox", "#listSkybox");
+    printDirectory(path + "Assets\\Resources\\"+worldName+"\\materials\\skybox\\Textures", "#listSkybox");
 }
 
 /* GENERAL UPDATE FUNCTIONS */
@@ -313,6 +368,7 @@ function printWorlds() {
 
     }
     $('#update_form').append('<input for="update_form" id="submit_update" type="submit" value="modifier">');
+    $('#update_form').append('<input for="update_form" id="delete_world" type="submit" value="supprimer">');
 
 }
 
@@ -325,3 +381,4 @@ function getFileExtension(file) {
 function validateFile(file, extension) {
     return (getFileExtension(file) == extension);
 }
+
