@@ -103,13 +103,27 @@ function dragElement(elmnt) {
     }
 }
 
+/* WORLD DELETE */
+
+function deleteWorld(world) {
+
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var folder = path  + "Assets\\Resources\\new\\" + world;
+    object.DeleteFile(path+"Assets\\scenes\\"+world+".unity");
+    object.DeleteFolder(folder);
+}
 
 /* WORLD UPDATE GENERAL FUNCTIONS */
 
 function updateForm() {
     printWorlds();
-    $("#update_form").submit(function () {
+    $("#submit_update").click(function () {
         generateUpdateForm($('input[name=name_update]:checked').val());
+        return false;
+    });  
+    $("#delete_world").click(function () {
+        console.log($('input[name=name_update]:checked').val());
+        deleteWorld($('input[name=name_update]:checked').val());
         return false;
     });
 }
@@ -340,16 +354,19 @@ function getWorlds() {
 
 function printDirectory(directory, div) {
     var object = new ActiveXObject("Scripting.FileSystemObject");
-    var folder = object.GetFolder(directory);
-    var fc = new Enumerator(folder.files);
-    $(div).append("<form class='list'></form>")
-    for (; !fc.atEnd(); fc.moveNext()) {
-        var filePath = directory+"\\"+fc.item().Name;
-        if (getFileExtension(filePath).localeCompare("meta") == true)
-            $(div+' .list').append('<input type="checkbox" name="feature"'
-                +'value="'+filePath+'" />'
-                +'<label for="scales"><a href="'+filePath+' target="_blank">'+fc.item().Name+'</a></label><br />');
+    if (object.FolderExists(directory)) {
+        var folder = object.GetFolder(directory);
+        var fc = new Enumerator(folder.files);
+        $(div).append("<form class='list'></form>")
+        for (; !fc.atEnd(); fc.moveNext()) {
+            var filePath = directory+"\\"+fc.item().Name;
+            if (getFileExtension(filePath).localeCompare("meta") == true)
+                $(div+' .list').append('<input type="checkbox" name="feature"'
+                    +'value="'+filePath+'" />'
+                    +'<label for="scales"><a href="'+filePath+'">'+fc.item().Name+'</a></label><br />');
+        }
     }
+    else $(div).append("<p class='no'>pas de contenu!</p>");
 }
 
 function printWorlds() {
@@ -369,6 +386,7 @@ function printWorlds() {
     }
     $('#update_form').append('<input for="update_form" id="submit_update" type="submit" value="modifier">');
     $('#update_form').append('<input for="update_form" id="delete_world" type="submit" value="supprimer">');
+
 
 }
 

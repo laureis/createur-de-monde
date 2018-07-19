@@ -27,6 +27,11 @@ nav ul li:hover {
     color:red;
 }
 
+.no {
+    font-size:10px;
+    
+}
+
 #page {
     position:relative;
     top:200px;
