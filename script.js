@@ -24,7 +24,8 @@ function setPath() {
     $('#setPath').append('<br /><input type="submit" id="submit_path" value="charger">');
     $('#submit_path').click(function() {
         path = $('#creatorFile').val();
-        alert("Le projet a bien été chargé !");
+        var fileName = getFileName(path);
+        path = path.substr(0, path.length - fileName.length);
         $('#form-container').removeClass('hidden');  
         $('#setPath').addClass('hidden');  
         return false;
@@ -39,11 +40,6 @@ function postit() {
     dragElement(document.getElementById("postit2"));
     $('#postit2 .close').click(function() {
         $('#postit2').addClass('hidden');
-    });
-    setTimeout($(".swag").focus(), 0);
-    dragElement(document.getElementById("postit3"));
-    $('#postit3 .close').click(function() {
-        $('#postit3').addClass('hidden');
     });
 }
 
@@ -124,6 +120,7 @@ function updateForm() {
     $("#delete_world").click(function () {
         console.log($('input[name=name_update]:checked').val());
         deleteWorld($('input[name=name_update]:checked').val());
+       // alert("Le monde a bien été supprimé.");
         return false;
     });
 }
@@ -148,10 +145,14 @@ function navigationUpdateFormMenu() {
 	$('#navUpdateAdd').click(function() {
         $('#updateAddForm').removeClass('hidden');
         $('#updateListForm').addClass('hidden');
+        $('#navUpdateAdd').removeClass('active');
+        $('#navUpdateList').addClass('active');
     });
     $('#navUpdateList').click(function() {
         $('#updateAddForm').addClass('hidden');
         $('#updateListForm').removeClass('hidden');
+        $('#navUpdateAdd').addClass('active');
+        $('#navUpdateList').removeClass('active');
     });
 }
 
@@ -179,8 +180,9 @@ function addBuilding(worldName) {
     $('#submit_building').click(function() {
         if (validateFile($('#buildingFile').val(), "obj")) {
             saveFile(worldName, $('#buildingFile').val(), "3d\\buildings\\prefab\\");
-        }
-        else alert("Le fichier doit être un obj");
+           // alert("Vous venez d'ajouter un building au monde "+worldName+".");
+            }
+        else// alert("Le fichier doit être un obj");
         return false;
     });
 }
@@ -195,8 +197,11 @@ function addObject(worldName) {
     $('#addObject').append('<br /><input type="submit" id="submit_object" value="ajouter">');
     $('#submit_object').click(function() {
         var type = $('input[name=typeObject]:checked').val();
-        if (validateFile($('#objectFile').val(), "obj")) saveFile(worldName, $('#objectFile').val(), "3d\\objects\\"+ type+ "\\prefab\\");
-        else alert("Le fichier doit être un obj");
+        if (validateFile($('#objectFile').val(), "obj")) {
+            saveFile(worldName, $('#objectFile').val(), "3d\\objects\\"+ type+ "\\prefab\\");
+           // alert("Vous venez d'ajouter un objet "+type+" au monde "+worldName+".");
+            }
+        else// alert("Le fichier doit être un obj");
         return false;
     });
 }
@@ -222,9 +227,11 @@ function addTexture(worldName) {
     $('#addTexture').append(x);
     $('#addTexture').append('<br /><input type="submit" id="submit_texture" value="ajouter">');
     $('#submit_texture').click(function() {
-        if (validateFile($('#textureFile').val(), "png")) 
+        if (validateFile($('#textureFile').val(), "png")) { 
             saveFile(worldName, $('#textureFile').val(), "materials\\troiscarres\\Textures\\");
-        else alert("Le fichier doit être un .png");
+           // alert("Vous venez d'ajouter une texture au monde "+worldName+".");
+            }
+        else// alert("Le fichier doit être un .png");
         return false;
     });
 }
@@ -238,9 +245,11 @@ function addTextPanel(worldName) {
     $('#addTextPanel').append(x);
     $('#addTextPanel').append('<br /><input type="submit" id="submit_text_panel" value="ajouter">');
     $('#submit_texture').click(function() {
-        if (validateFile($('#textPanelFile').val(), "png")) 
+        if (validateFile($('#textPanelFile').val(), "png")) {
             saveFile(worldName, $('#textPanelFile').val(), "materials\\panels\\Textures\\");
-        else alert("Le fichier doit être un .png");
+           // alert("Vous venez d'ajouter un panneau de texte au monde "+worldName+".");
+            }
+        else// alert("Le fichier doit être un .png");
         return false;
     });
 }
@@ -253,8 +262,11 @@ function addSkybox(worldName) {
     $('#addSkybox').append(x);
     $('#addSkybox').append('<br /><input type="submit" id="submit_skybox" value="ajouter">');
     $('#submit_skybox').click(function() {
-        if (validateFile($('#skyboxFile').val(), "png")) saveFile(worldName, $('#skyboxFile').val(), "materials\\skybox\\Textures\\");
-        else alert("Le fichier doit être un .png");
+        if (validateFile($('#skyboxFile').val(), "png")) {
+            saveFile(worldName, $('#skyboxFile').val(), "materials\\skybox\\Textures\\");
+           // alert("Vous venez d'ajouter une skybox au monde "+worldName+".");
+            }
+        else// alert("Le fichier doit être un .png");
         return false;
     });
 }
@@ -326,6 +338,7 @@ function listSkybox(worldName) {
 function create(world) {
     $("#creator").submit(function (e) {
         newWorld($('input[name=inspi]:checked').val(), $( "input[type=text][name=newName]" ).val());
+       // alert("Un tout nouveau monde est né... "+worldName+" !");
         return false;
     });
 }
@@ -388,6 +401,12 @@ function printWorlds() {
     $('#update_form').append('<input for="update_form" id="delete_world" type="submit" value="supprimer">');
 
 
+}
+
+function getFileName(file) {
+    var object = new ActiveXObject("Scripting.FileSystemObject");
+    var fileName = object.GetFileName(file);
+    return fileName;
 }
 
 function getFileExtension(file) {

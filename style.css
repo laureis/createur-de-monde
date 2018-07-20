@@ -76,24 +76,6 @@ nav ul li:hover {
     top:10%;
 }
 
-#postit3 {
-    position: absolute;
-    z-index: 9;
-    width:200px;
-    background-color: yellow;
-    font-size:12px;
-    padding:10px;
-    cursor:move;
-    left:50%;
-    top:40%;
-}
-
-.swag {
-    background-color: yellow;
-    z-index:20;
-    border:0;
-    overflow:hidden;
-}
 #postit2 {
     position: absolute;
     z-index: 9;
@@ -144,4 +126,8 @@ input[type="submit"] {
 
 input[type="file"] {
     width:100px;
+}
+
+#setPath {
+    padding:20px;
 }
